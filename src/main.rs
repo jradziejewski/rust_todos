@@ -39,40 +39,20 @@ fn main() {
         match choice {
             1 => {
                 println!("Enter the new Todo: ");
-                let mut new_todo = String::new();
-                io::stdin().read_line(&mut new_todo).expect("Failed to read line");
+                let new_todo = get_string();
                 add_todo(&mut todos, new_todo.trim().to_string(), &mut idx);
             }
             2 => {
                 println!("Enter the index to remove: ");
-                let mut idx_str = String::new();
-                io::stdin().read_line(&mut idx_str).expect("Failed to read line");
-                let index: i32 = match idx_str.trim().parse() {
-                    Ok(num) => num,
-                    Err(_) => {
-                        println!("Invalid input. Please enter a number");
-                        print!("\x1B[2J");
-                        continue;
-                    }
-                };
+                let index: i32 = get_i32().unwrap();
                 remove_todo(&mut todos, index);
             }
             3 => {
                 println!("Enter the todo index: ");
-                let mut idx_str = String::new();
-                io::stdin().read_line(&mut idx_str).expect("Failed to read line");
-                let index: i32 = match idx_str.trim().parse() {
-                    Ok(num) => num,
-                    Err(_) => {
-                        println!("Invalid input. Please enter a number");
-                        print!("\x1B[2J");
-                        continue;
-                    }
-                };
+                let index = get_i32().unwrap();
                 println!("Enter the new todo name: ");
-                let mut new_todo = String::new();
-                io::stdin().read_line(&mut new_todo).expect("Failed to read line");
-                edit_todo(&mut todos, new_todo.trim().to_string(), index);
+                let new_todo = get_string(); 
+                edit_todo(&mut todos, new_todo, index);
             }
             0 => {
                 println!("Goodbye!");
@@ -110,4 +90,19 @@ fn edit_todo(todos: &mut Vec<Todo>, new_text: String, idx: i32) {
     } else {
         println!("Todo with idx {} not found", idx);
     }
+}
+
+fn get_i32() -> Result<i32, String> {
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).expect("Failed to read line");
+    match input.trim().parse() {
+        Ok(num) => Ok(num),
+        Err(_) => Err("Invalid input. Please enter a number".to_string()),
+    }
+}
+
+fn get_string() -> String {
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).expect("Failed to read line");
+    input
 }
