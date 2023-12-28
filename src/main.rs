@@ -1,20 +1,17 @@
+mod todos;
 use std::io;
 
-#[derive(Debug)]
-struct Todo {
-    idx: i32,
-    text: String,
-}
-
+use crate::todos::todo::Todo;
+use crate::todos::todoList::TodoList;
 
 fn main() {
-    let mut todos: Vec<Todo> = vec![];
+    let mut todos = TodoList { entities: vec![] };
     let mut idx: i32 = 1;
 
     loop {
         println!("Your todos: ");
         for todo in &todos {
-            println!("{}: {}", todo.idx, todo.text);
+            println!("{}", todo);
         } 
         println!("\n --- \n");
 
@@ -67,28 +64,27 @@ fn main() {
     }
 }
 
-fn add_todo(todos: &mut Vec<Todo>, new_todo: String, idx: &mut i32) {
-    todos.push(Todo {
+fn add_todo(todos: &mut TodoList, new_todo: String, idx: &mut i32) {
+    todos.entities.push(Todo {
         idx: *idx,
-        text: new_todo
+        text: new_todo,
+        completed: false
     });
 
     *idx += 1;
 }
 
-fn remove_todo(todos: &mut Vec<Todo>, idx: i32) {
-    if let Some(index) = todos.iter().position(|todo| todo.idx == idx) {
-        todos.remove(index);
+fn remove_todo(todos: &mut TodoList, idx: i32) {
+    if let Some(index) = todos.entities.iter().position(|todo| todo.idx == idx) {
+        todos.entities.remove(index);
     } else {
         println!("Todo with idx {} not found", idx);
     }
 }
 
-fn edit_todo(todos: &mut Vec<Todo>, new_text: String, idx: i32) {
-    if let Some(todo) = todos.iter_mut().find(|todo| todo.idx == idx) {
-        todo.text = new_text;
-    } else {
-        println!("Todo with idx {} not found", idx);
+fn edit_todo(todos: &mut TodoList, new_text: String, idx: i32) {
+    if let Some(todo) = todos.entities.iter_mut().find(|todo| todo.idx == idx) {
+        todo.edit_todo(new_text);
     }
 }
 
