@@ -6,7 +6,7 @@ use crate::todos::todoList::TodoList;
 
 fn main() {
     let mut todos = TodoList { entities: vec![] };
-    let mut idx: i32 = 1;
+    let mut idx: usize = 1;
 
     loop {
         println!("Your todos: ");
@@ -24,7 +24,7 @@ fn main() {
         let mut choice = String::new();
         io::stdin().read_line(&mut choice).expect("Failed to read line");
 
-        let choice: i32 = match choice.trim().parse() {
+        let choice: usize = match choice.trim().parse() {
             Ok(num) => num,
             Err(_) => {
                 println!("Invalid input. Please enter a number");
@@ -41,12 +41,12 @@ fn main() {
             }
             2 => {
                 println!("Enter the index to remove: ");
-                let index: i32 = get_i32().unwrap();
+                let index: usize = get_usize().unwrap();
                 remove_todo(&mut todos, index);
             }
             3 => {
                 println!("Enter the todo index: ");
-                let index = get_i32().unwrap();
+                let index = get_usize().unwrap();
                 println!("Enter the new todo name: ");
                 let new_todo = get_string(); 
                 edit_todo(&mut todos, new_todo, index);
@@ -64,7 +64,7 @@ fn main() {
     }
 }
 
-fn add_todo(todos: &mut TodoList, new_todo: String, idx: &mut i32) {
+fn add_todo(todos: &mut TodoList, new_todo: String, idx: &mut usize) {
     todos.entities.push(Todo {
         idx: *idx,
         text: new_todo,
@@ -74,7 +74,7 @@ fn add_todo(todos: &mut TodoList, new_todo: String, idx: &mut i32) {
     *idx += 1;
 }
 
-fn remove_todo(todos: &mut TodoList, idx: i32) {
+fn remove_todo(todos: &mut TodoList, idx: usize) {
     if let Some(index) = todos.entities.iter().position(|todo| todo.idx == idx) {
         todos.entities.remove(index);
     } else {
@@ -82,13 +82,13 @@ fn remove_todo(todos: &mut TodoList, idx: i32) {
     }
 }
 
-fn edit_todo(todos: &mut TodoList, new_text: String, idx: i32) {
+fn edit_todo(todos: &mut TodoList, new_text: String, idx: usize) {
     if let Some(todo) = todos.entities.iter_mut().find(|todo| todo.idx == idx) {
         todo.edit_todo(new_text);
     }
 }
 
-fn get_i32() -> Result<i32, String> {
+fn get_usize() -> Result<usize, String> {
     let mut input = String::new();
     io::stdin().read_line(&mut input).expect("Failed to read line");
     match input.trim().parse() {

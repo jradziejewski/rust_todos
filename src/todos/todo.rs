@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 pub struct Todo {
-    pub idx: i32,
+    pub idx: usize,
     pub text: String,
     pub completed: bool,
 }
